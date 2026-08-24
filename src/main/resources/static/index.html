@@ -1,16 +1,37 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Speech to Text</title>
-	<link rel="stylesheet" href="styles.css"
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <h1>Speech to Text</h1>
-    <button id="recordButton">Start Recording</button>
-    <p id="status">Ready</p>
-    <p id="result"></p>
+
+    <div class="container">
+
+        <h1>Speech to Text</h1>
+        <p class="subtitle">Turn your voice into text</p>
+
+        <div class="card">
+
+            <button id="recordButton">Start Recording</button>
+
+            <p id="status">Ready to record</p>
+
+            <div id="result">
+                Your transcription will appear here...
+            </div>
+
+        </div>
+
+    </div>
 
     <script src="app.js"></script>
+
 </body>
 </html>
