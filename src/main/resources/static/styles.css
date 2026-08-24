@@ -1,0 +1,35 @@
+body {
+    font-family: sans-serif;
+    background-color: rgb(254, 255, 255);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding-top: 80px;
+}
+
+button {
+    background-color: rgb(148, 17, 0);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#status {
+    margin-top: 20px;
+    font-size: 14px;
+    color: rgb(121, 121, 121);
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
