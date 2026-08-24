@@ -15,25 +15,31 @@ recordButton.addEventListener('click', async () => {
 });
 
 async function startRecording() {
-	// get access to the microphone
+    // get access to the microphone
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
     mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
 
     mediaRecorder.ondataavailable = (event) => {
-		// store the recorded audio
+        // store the recorded audio
         audioChunks.push(event.data);
     };
 
     mediaRecorder.onstop = async () => {
-		// turn the recording into a file
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        // turn the recording into a webm audio blob
+        const audioBlob = new Blob(audioChunks, {
+            type: 'audio/webm'
+        });
+
         await uploadAudio(audioBlob);
-		// stop the microphone after recording finishes
+
+        // stop the microphone after recording finishes
         stream.getTracks().forEach(track => track.stop());
     };
 
     mediaRecorder.start();
+
     isRecording = true;
     recordButton.textContent = 'Stop Recording';
     statusElement.textContent = 'Recording...';
@@ -41,6 +47,7 @@ async function startRecording() {
 
 function stopRecording() {
     mediaRecorder.stop();
+
     isRecording = false;
     recordButton.textContent = 'Start Recording';
     statusElement.textContent = 'Processing...';
@@ -48,17 +55,27 @@ function stopRecording() {
 
 async function uploadAudio(audioBlob) {
     try {
-		// send the audio to the server
+        // send the audio to the server
         const response = await fetch('/api/v1/transcribe', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/octet-stream' },
+            headers: {
+                'Content-Type': 'audio/webm'
+            },
             body: audioBlob
         });
 
-		// get the text from the response
-		const text = await response.text();
+        // check whether the server returned an error
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error ${response.status}: ${errorText}`);
+        }
+
+        // get the transcribed text from the response
+        const text = await response.text();
+
         resultElement.textContent = text;
         statusElement.textContent = 'Ready';
+
     } catch (error) {
         resultElement.textContent = 'Error: ' + error.message;
         statusElement.textContent = 'Ready';
