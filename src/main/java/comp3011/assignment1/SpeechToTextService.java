@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class SpeechToTextService {
@@ -24,6 +26,8 @@ public class SpeechToTextService {
         this.apiKey = apiKey;
         this.serverStats = serverStats;
     }
+    
+    private static final Logger logger = LoggerFactory.getLogger(SpeechToTextService.class);
 
     public String transcribe(byte[] audioBytes, String contentType) {
         String filename = filenameFor(contentType);
@@ -50,19 +54,23 @@ public class SpeechToTextService {
                 .retrieve()
                 .body(TranscriptionResponse.class);
 
+
         if (response == null) {
+            logger.warn("OpenAI returned an empty response body");
             return "";
         }
 
-        // record token usage if openai returned it
         if (response.usage() != null) {
             serverStats.addTokens(response.usage().inputTokens(), response.usage().outputTokens());
         }
 
-        // return the transcribed text
+        logger.info("Transcription succeeded: {} input tokens, {} output tokens",
+                response.usage() != null ? response.usage().inputTokens() : 0,
+                response.usage() != null ? response.usage().outputTokens() : 0);
+
         return response.text();
     }
-
+    
     // picks the right filename/extension based on what the client actually sent
     private String filenameFor(String contentType) {
         if (contentType == null) {
