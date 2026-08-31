@@ -23,10 +23,11 @@ public class TranscribeController {
             @RequestBody byte[] audioData,
             @RequestHeader(value = HttpHeaders.CONTENT_TYPE, required = false) String contentType) {
 
-        // send audio to openai stt service
-        String text = sttService.transcribe(audioData, contentType);
+        if (audioData == null || audioData.length == 0) {
+            throw new IllegalArgumentException("Audio data must not be empty");
+        }
 
-        // return transcribed text to frontend
+        String text = sttService.transcribe(audioData, contentType);
         return ResponseEntity.ok(text);
     }
 }
