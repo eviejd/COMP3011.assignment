@@ -1,5 +1,4 @@
 package comp3011.assignment1;
-
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
